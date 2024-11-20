@@ -64,8 +64,10 @@ def create_model(opt, opt_net, other_nets=None):
     # For backwards compatibility.
     if not which_model:
         which_model = opt_net['which_model_G']
+    print(which_model,"__which model")
     if not which_model:
         which_model = opt_net['which_model_D']
+    print(which_model,"__which model")
     registered_fns = find_registered_model_fns()
     print(registered_fns,"__registered_fns")
     print(registered_fns.keys(),"__registered_fns.keys()")
