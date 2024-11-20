@@ -38,18 +38,24 @@ def find_registered_model_fns(base_path='models'):
     print(base_path,"base_path")
     print(module_iter,"module_iter----------")
     for mod in module_iter:
+        print(mod,"mod")
         if os.path.join(os.getcwd(), base_path) not in mod.module_finder.path:
+            print(mod.module_finder.path,"mod.module_finder.path")
             continue   # I have no idea why this is necessary - I think it's a bug in the latest PyWindows release.
         if mod.ispkg:
+            print(mod.name)
             EXCLUSION_LIST = ['flownet2']
             if mod.name not in EXCLUSION_LIST:
                 found_fns.update(find_registered_model_fns(f'{base_path}/{mod.name}'))
         else:
             mod_name = f'{base_path}/{mod.name}'.replace('/', '.')
+            print(mod_name,"mod_namee")
             importlib.import_module(mod_name)
             for mod_fn in getmembers(sys.modules[mod_name], isfunction):
+                print(mod_fn,"mod_fn")
                 if hasattr(mod_fn[1], "_dlas_registered_model"):
                     found_fns[mod_fn[1]._dlas_model_name] = mod_fn[1]
+    print(found_fns,"found fns")
     return found_fns
 
 
