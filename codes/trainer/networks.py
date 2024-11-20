@@ -60,12 +60,15 @@ class CreateModelError(Exception):
 
 def create_model(opt, opt_net, other_nets=None):
     which_model = opt_net['which_model']
+    print(which_model,"__which model")
     # For backwards compatibility.
     if not which_model:
         which_model = opt_net['which_model_G']
     if not which_model:
         which_model = opt_net['which_model_D']
     registered_fns = find_registered_model_fns()
+    print(registered_fns,"__registered_fns")
+    print(registered_fns.keys(),"__registered_fns.keys()")
     if which_model not in registered_fns.keys():
         raise CreateModelError(which_model, list(registered_fns.keys()))
     num_params = len(signature(registered_fns[which_model]).parameters)
