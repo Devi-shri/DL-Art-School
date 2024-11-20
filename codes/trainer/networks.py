@@ -32,69 +32,69 @@ def register_model(func):
     return func
 
 
-# def find_registered_model_fns(base_path='models'):
-#     found_fns = {}
-#     module_iter = pkgutil.walk_packages([base_path])
-#     print(base_path,"base_path")
-#     print(module_iter,"module_iter----------")
-#     for mod in module_iter:
-#         print(mod,"mod")
-#         if os.path.join(os.getcwd(), base_path) not in mod.module_finder.path:
-#             print(mod.module_finder.path,"mod.module_finder.path")
-#             continue   # I have no idea why this is necessary - I think it's a bug in the latest PyWindows release.
-#         if mod.ispkg:
-#             print(mod.name)
-#             EXCLUSION_LIST = ['flownet2']
-#             if mod.name not in EXCLUSION_LIST:
-#                 found_fns.update(find_registered_model_fns(f'{base_path}/{mod.name}'))
-#         else:
-#             mod_name = f'{base_path}/{mod.name}'.replace('/', '.')
-#             print(mod_name,"mod_namee")
-#             importlib.import_module(mod_name)
-#             for mod_fn in getmembers(sys.modules[mod_name], isfunction):
-#                 print(mod_fn,"mod_fn")
-#                 if hasattr(mod_fn[1], "_dlas_registered_model"):
-#                     found_fns[mod_fn[1]._dlas_model_name] = mod_fn[1]
-#     print(found_fns,"found fns")
-#     return found_fns
-
-def find_registered_model_fns(base_path='model'):
-    if not os.path.isdir(base_path):
-        logger.error(f"Base path '{base_path}' does not exist or is not a directory.")
-        return {}
-
+def find_registered_model_fns(base_path='models'):
     found_fns = {}
     module_iter = pkgutil.walk_packages([base_path])
-    logger.debug(f"Walking packages in base_path: {base_path}")
-    
+    print(base_path,"base_path")
+    print(module_iter,"module_iter----------")
     for mod in module_iter:
         print(mod,"mod")
-        logger.debug(f"Processing module: {mod}")
-        try:
-            # Check if the module is within the specified base path
-            if not os.path.abspath(base_path) in mod.module_finder.path:
-                logger.warning(f"Skipping module: {mod.name} (not in base_path)")
-                continue
-
-            if mod.ispkg:
-                # Recursively process sub-packages
-                EXCLUSION_LIST = ['flownet2']
-                if mod.name not in EXCLUSION_LIST:
-                    found_fns.update(find_registered_model_fns(os.path.join(base_path, mod.name)))
-            else:
-                mod_name = f'{base_path}/{mod.name}'.replace('/', '.').replace('\\', '.')
-                logger.debug(f"Importing module: {mod_name}")
-                imported_module = importlib.import_module(mod_name)
-
-                # Check for registered functions
-                for mod_fn in getmembers(imported_module, isfunction):
-                    if hasattr(mod_fn[1], "_dlas_registered_model"):
-                        found_fns[mod_fn[1]._dlas_model_name] = mod_fn[1]
-        except Exception as e:
-            logger.error(f"Error processing module {mod.name}: {e}", exc_info=True)
-    
-    logger.info(f"Found registered functions: {found_fns}")
+        # if os.path.join(os.getcwd(), base_path) not in mod.module_finder.path:
+        #     print(mod.module_finder.path,"mod.module_finder.path")
+        #     continue   # I have no idea why this is necessary - I think it's a bug in the latest PyWindows release.
+        if mod.ispkg:
+            print(mod.name)
+            EXCLUSION_LIST = ['flownet2']
+            if mod.name not in EXCLUSION_LIST:
+                found_fns.update(find_registered_model_fns(f'{base_path}/{mod.name}'))
+        else:
+            mod_name = f'{base_path}/{mod.name}'.replace('/', '.')
+            print(mod_name,"mod_namee")
+            importlib.import_module(mod_name)
+            for mod_fn in getmembers(sys.modules[mod_name], isfunction):
+                print(mod_fn,"mod_fn")
+                if hasattr(mod_fn[1], "_dlas_registered_model"):
+                    found_fns[mod_fn[1]._dlas_model_name] = mod_fn[1]
+    print(found_fns,"found fns")
     return found_fns
+
+# def find_registered_model_fns(base_path='models'):
+#     if not os.path.isdir(base_path):
+#         logger.error(f"Base path '{base_path}' does not exist or is not a directory.")
+#         return {}
+
+#     found_fns = {}
+#     module_iter = pkgutil.walk_packages([base_path])
+#     logger.debug(f"Walking packages in base_path: {base_path}")
+    
+#     for mod in module_iter:
+#         print(mod,"mod")
+#         logger.debug(f"Processing module: {mod}")
+#         try:
+#             # Check if the module is within the specified base path
+#             if not os.path.abspath(base_path) in mod.module_finder.path:
+#                 logger.warning(f"Skipping module: {mod.name} (not in base_path)")
+#                 continue
+
+#             if mod.ispkg:
+#                 # Recursively process sub-packages
+#                 EXCLUSION_LIST = ['flownet2']
+#                 if mod.name not in EXCLUSION_LIST:
+#                     found_fns.update(find_registered_model_fns(os.path.join(base_path, mod.name)))
+#             else:
+#                 mod_name = f'{base_path}/{mod.name}'.replace('/', '.').replace('\\', '.')
+#                 logger.debug(f"Importing module: {mod_name}")
+#                 imported_module = importlib.import_module(mod_name)
+
+#                 # Check for registered functions
+#                 for mod_fn in getmembers(imported_module, isfunction):
+#                     if hasattr(mod_fn[1], "_dlas_registered_model"):
+#                         found_fns[mod_fn[1]._dlas_model_name] = mod_fn[1]
+#         except Exception as e:
+#             logger.error(f"Error processing module {mod.name}: {e}", exc_info=True)
+    
+#     logger.info(f"Found registered functions: {found_fns}")
+#     return found_fns
 
 
 
