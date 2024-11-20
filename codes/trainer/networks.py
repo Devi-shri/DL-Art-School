@@ -58,7 +58,7 @@ def register_model(func):
 #     print(found_fns,"found fns")
 #     return found_fns
 
-def find_registered_model_fns(base_path='models'):
+def find_registered_model_fns(base_path='model'):
     if not os.path.isdir(base_path):
         logger.error(f"Base path '{base_path}' does not exist or is not a directory.")
         return {}
